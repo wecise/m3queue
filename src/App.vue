@@ -4,6 +4,7 @@
         <Header :auth="auth" v-if="auth"></Header>
       </el-header>
     <el-main>
+      <h3 style="margin:0px 0px 10px 0px;">队列监控</h3>
       <MainView :global="global" v-if="global"></MainView>
     </el-main>
   </el-container>

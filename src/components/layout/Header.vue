@@ -142,9 +142,7 @@ export default{
         height: 32px;
         padding: 7px 0px;
     }
-    .m3 > .el-main{
-        padding: 0px;
-    }
+    
     .el-link.el-link--default {
         color: #ffffff;
     }

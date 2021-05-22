@@ -3,9 +3,13 @@
     <el-main>
         <Split :gutterSize="5">
             <SplitArea :size="20" :minSize="0" style="overflow:hidden;">
-                <el-tree :data="tree.data" @node-click="onNodeClick"></el-tree>
+                <el-tree :data="tree.data" @node-click="onNodeClick">
+                  <span slot-scope="{ data }">
+                    {{data.title}}
+                  </span>
+                </el-tree>
             </SplitArea>
-            <SplitArea :size="80" :minSize="0" style="overflow:hidden;padding:20px;">
+            <SplitArea :size="80" :minSize="0" style="overflow:hidden;">
               <el-container>
                 
                 <el-main>
@@ -44,14 +48,14 @@ export default {
     return {
         tree: {
           data: [
-            { label: "General Server Information", url: "varz"},
-            { label: "Connections", url: "connz"},
-            { label: "Routing", url: "routez"},
-            { label: "Gateways", url: "gatewayz"},
-            { label: "Leaf Nodes", url: "leafz"},
-            { label: "Subscription Routing", url: "subsz"},
-            { label: "Account Information", url: "accountz"},
-            { label: "JetStream Information", url: "jsz"}
+            { label: "General Server Information", title:"服务器信息", url: "varz"},
+            { label: "Connections", title:"连接信息", url: "connz"},
+            { label: "Routing", title:"路由信息", url: "routez"},
+            { label: "Gateways", title:"网关信息", url: "gatewayz"},
+            { label: "Leaf Nodes", title:"子节点信息", url: "leafz"},
+            { label: "Subscription Routing", title:"路由订阅", url: "subsz"},
+            { label: "Account Information", title:"账户信息", url: "accountz"},
+            { label: "JetStream Information", title:"JetStream", url: "jsz"}
           ]
         },
         editor: {
@@ -79,7 +83,7 @@ export default {
             this.editor.data = JSON.stringify(data,null,2);
           },
           error: (err)=>{
-            this.editor.data = "";
+            this.editor.data = err;
           }
         })
     },
@@ -97,9 +101,8 @@ export default {
 <style scoped>
 
   .el-container{
-    height: 100vh;
+    height:calc(100vh - 120px);
+    background:#f2f2f2;
   }
-  .el-main{
-    padding: 0px;
-  }
+  
 </style>
