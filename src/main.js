@@ -14,7 +14,7 @@ import VueSplit from 'vue-split-panel'
 import './js/dialog'
 import './icons'
 
-Vue.use(VueSplit)
+Vue.use(VueSplit);
 Vue.use(animate);
 Vue.use(VueI18n);
 
