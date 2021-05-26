@@ -3,9 +3,10 @@
     <el-main>
         <Split :gutterSize="5">
             <SplitArea :size="20" :minSize="0" style="overflow:hidden;">
-                <el-tree :data="tree.data" @node-click="onNodeClick">
+                <el-tree :data="tree.data" @node-click="onNodeClick" style="height:100%;overflow:auto;">
                   <span slot-scope="{ data }">
-                    {{data.title}}
+                    <span v-if="data.children && data.children.length > 0">{{data.title}} ({{data.children.length}})</span>
+                    <span v-else>{{data.title}}</span>
                   </span>
                 </el-tree>
             </SplitArea>
@@ -35,6 +36,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import $ from 'jquery';
 export default {
   name: "MainView",
@@ -55,7 +57,12 @@ export default {
             { label: "Leaf Nodes", title:"子节点信息", url: "leafz"},
             { label: "Subscription Routing", title:"路由订阅", url: "subsz"},
             { label: "Account Information", title:"账户信息", url: "accountz"},
-            { label: "JetStream Information", title:"JetStream", url: "jsz"}
+            { label: "JetStream Information", title:"JetStream", url: "", children:[
+                { label: "serverz", title:"serverz", url: "/streaming/serverz", children:[]},
+                { label: "storez", title:"storez", url: "/streaming/storez", children:[]},
+                { label: "clientsz", title:"clientsz", url: "/streaming/clientsz", children:[]},
+                { label: "channelsz", title:"channelsz", url: "/streaming/channelsz", children:[]},
+            ]}
           ]
         },
         editor: {
@@ -74,13 +81,27 @@ export default {
   },
   methods: {
     onNodeClick(treeNode){
-        let hostname = "47.92.151.165";
+
+        let hostname = process.env.NODE_ENV === "development" ? "47.92.151.165" : window.location.hostname;
         let api = `http://${hostname}:8222/${treeNode.url}`;
+
         $.get({
           url:api,
           dataType: "jsonp",
           success:(data)=>{
+
             this.editor.data = JSON.stringify(data,null,2);
+
+            if(treeNode.url === '/streaming/clientsz'){
+                treeNode.children = _.map(data.clients, v=>{
+                  return _.extend(v, { label: v.id, title: v.id, url: `${treeNode.url}?client=${v.id}&subs=1.`});
+                })
+            } 
+            else if(treeNode.url === '/streaming/channelsz'){
+                treeNode.children = _.map(data.names, v=>{
+                  return _.extend(v, { label: v, title: v, url: `${treeNode.url}?channel=${v}&subs=1`});
+                })
+            }
           },
           error: (err)=>{
             this.editor.data = err;
