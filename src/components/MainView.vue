@@ -13,18 +13,23 @@
             <SplitArea :size="80" :minSize="0" style="overflow:hidden;">
               <el-container>
                 
-                <el-main>
-                  
-                    <Editor
-                          v-model="editor.data"
-                          @init="onEditorInit"
-                          :lang="editor.lang.value"
-                          :theme="editor.theme.value"
-                          width="99.8%"
-                          height="calc(100% - 90px)"
-                          style="border:1px solid #f2f2f2;"
-                      ></Editor>
-                  
+                <el-main style="padding-top: 0px;padding-bottom: 0px;">
+                    <Split :gutterSize="5" direction="vertical" @onDragEnd="onDragEnd">
+                      <SplitArea :size="60" :minSize="0" style="overflow:hidden;">
+                        <connz :model="tree.selected" v-if="tree.selected && tree.selected.url==='connz'"></connz>
+                      </SplitArea>
+                      <SplitArea :size="40" :minSize="0" style="overflow:hidden;">
+                          <Editor
+                                v-model="editor.data"
+                                @init="onEditorInit"
+                                :lang="editor.lang.value"
+                                :theme="editor.theme.value"
+                                width="100%"
+                                height="calc(100% - 0px)"
+                                style="border:1px solid #f2f2f2;">
+                          </Editor>
+                    </SplitArea>
+                  </Split>
                 </el-main>
                 
               </el-container>
@@ -38,6 +43,8 @@
 <script>
 import _ from 'lodash';
 import $ from 'jquery';
+import Connz from './summary/Connz';
+
 export default {
   name: "MainView",
   props: {
@@ -45,6 +52,7 @@ export default {
   },
   components:{
     Editor:require("vue2-ace-editor"),
+    Connz
   },
   data() {
     return {
@@ -63,7 +71,8 @@ export default {
                 { label: "clientsz", title:"clientsz", url: "/streaming/clientsz", children:[]},
                 { label: "channelsz", title:"channelsz", url: "/streaming/channelsz", children:[]},
             ]}
-          ]
+          ],
+          selected: null
         },
         editor: {
               data: null,
@@ -76,7 +85,7 @@ export default {
                   value: "chrome",
                   list: this.m3.EDITOR_THEME
               }
-          },
+        }
     };
   },
   methods: {
@@ -102,6 +111,8 @@ export default {
                   return _.extend(v, { label: v, title: v, url: `${treeNode.url}?channel=${v}&subs=1`});
                 })
             }
+
+            this.tree.selected = _.extend( treeNode, {data: data} );
           },
           error: (err)=>{
             this.editor.data = err;
@@ -113,7 +124,10 @@ export default {
           require(`brace/mode/${this.editor.lang.value}`); //language
           require(`brace/snippets/${this.editor.lang.value}`); //snippet
           require(`brace/theme/${this.editor.theme.value}`); //language
-      },
+    },
+    onDragEnd(){
+      this.eventHub.$emit("WINDOW-RESIZE-EVENT");
+    }
   }
 };
 </script>

@@ -65,27 +65,13 @@ let init = async function(){
 
 if(process.env.NODE_ENV === "development"){
 
-  /* env1 */
-  let env1 = function(){
-    m3.connect({proxy:"http",ip:"47.92.151.165",port:8080,company:"wecise",username:"admin",password:"admin1234)(*&"}).then(()=>{
+  m3.connect({company: process.env.VUE_APP_M3_COMPANY, username: process.env.VUE_APP_M3_USERNAME, password: process.env.VUE_APP_M3_PASSWORD }).then( ()=>{
+    setTimeout(()=>{
       init();
-    }).catch((err)=>{
-      console.log(err);
-    });
-  };
-  
-  /* env2 */
-  /* let env2 = function(){
-    m3.connect({proxy:"http","ip":"18.188.85.82",port:8080,company:"wecise",username:"admin",password:"admin"}).then( ()=>{
-      setTimeout(()=>{
-        init();
-      },5000)
-    }).catch((err)=>{
-      console.log(err);
-    });
-  }; */
-
-  env1();
+    },500)
+  }).catch((err)=>{
+    console.log(err);
+  });
   
 } else {
   m3.init();

@@ -1,15 +1,16 @@
 #! /bin/bash
 set -euo
 
-company="wecise"
-username="admin"
-password="admin1234)(*&"
-target="app.zip"
+hostTerm=$1
+company=$2
+username=$3
+password=$4
+target=$5
 
 auth="$company.$username:$password"
-hostTerm=${M3_HOST}
 hostPreFix="http://"
 host=""
+
 if [[ $hostTerm =~ $hostPreFix ]] 
 then
     host=$hostTerm
