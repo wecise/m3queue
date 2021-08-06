@@ -34,7 +34,6 @@ npm run serve
 
 ### Compiles and minifies for production
 ```
-export M3_HOST=example-m3-host.com
 npm run build
 ```
 
