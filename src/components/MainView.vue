@@ -11,12 +11,13 @@
                 </el-tree>
             </SplitArea>
             <SplitArea :size="80" :minSize="0" style="overflow:hidden;">
-              <el-container>
+              <el-container style="width:100%;">
                 
                 <el-main style="padding-top: 0px;padding-bottom: 0px;">
                     <Split :gutterSize="5" direction="vertical" @onDragEnd="onDragEnd">
                       <SplitArea :size="60" :minSize="0" style="overflow:hidden;">
                         <connz :model="tree.selected" v-if="tree.selected && tree.selected.url==='connz'"></connz>
+                        <channelsz :model="tree.selected" v-if="tree.selected && tree.selected.url==='/streaming/channelsz'"></channelsz>
                       </SplitArea>
                       <SplitArea :size="40" :minSize="0" style="overflow:hidden;">
                           <Editor
@@ -26,7 +27,8 @@
                                 :theme="editor.theme.value"
                                 width="100%"
                                 height="calc(100% - 0px)"
-                                style="border:1px solid #f2f2f2;">
+                                style="border:1px solid #f2f2f2;"
+                                v-if="editor.data">
                           </Editor>
                     </SplitArea>
                   </Split>
@@ -44,6 +46,7 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import Connz from './summary/Connz';
+import Channelsz from './summary/Channelsz'
 
 export default {
   name: "MainView",
@@ -52,7 +55,8 @@ export default {
   },
   components:{
     Editor:require("vue2-ace-editor"),
-    Connz
+    Connz,
+    Channelsz
   },
   data() {
     return {

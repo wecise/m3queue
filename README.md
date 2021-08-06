@@ -3,10 +3,24 @@
     <h3>m3queue</h3>
 </div>
 
-## Feature
+## Base setup
+> Create a env file by yourself
+```
+.env
+```
 
-<img src="http://wecise.com/assets/image/m3event/m3event.png" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);" />
+> The contents of the env are as follows
+```
+VUE_APP_M3_APP="m3queue"                -- app name
 
+VUE_APP_M3_HOST="47.92.151.165:8080"    -- host
+
+VUE_APP_M3_COMPANY="wecise"             -- company
+
+VUE_APP_M3_USERNAME="admin"             -- username
+
+VUE_APP_M3_PASSWORD="********"          -- password
+```
 
 ## Project setup
 ```

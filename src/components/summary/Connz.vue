@@ -1,35 +1,103 @@
 <template>
-    <div style="width:100%;height:100%;" ref="chartContainer"></div>
+    <v-chart :option="options" 
+        class="chart" 
+        :autoresize="true">
+    </v-chart>
+    
 </template>
 
 <script>
-import _ from 'lodash';
-import echarts from 'echarts';
+import _ from "lodash";
+import ECharts  from "vue-echarts";
+import { use } from "echarts/core";
+
+// import ECharts modules manually to reduce bundle size
+import {
+  CanvasRenderer
+} from 'echarts/renderers';
+import {
+  SankeyChart
+} from 'echarts/charts';
+import {
+  GridComponent,
+  TooltipComponent
+} from 'echarts/components';
+
+use([
+  CanvasRenderer,
+  SankeyChart,
+  GridComponent,
+  TooltipComponent
+]);
+
 
 export default{
     name: "Connz",
     props: {
         model: Object
     },
+    components: {
+        "v-chart": ECharts
+    },
     data() {
         return {
-            chart: null,
-            option: {
+            options: {
                 tooltip: {
                     trigger: 'item',
                     triggerOn: 'mousemove'
                 },
                 animation: false,
+                left: 50.0,
+                top: 120.0,
+                right: 150.0,
+                bottom: 25.0,
                 series: [{
                     type: 'sankey',
-                    focusNodeAdjacency: 'allEdges',
                     nodeAlign: 'right',
                     data: [],
                     links: [],
                     lineStyle: {
                         color: 'source',
                         curveness: 0.5
-                    }
+                    },
+                    focusNodeAdjacency: true,
+                    levels: [{
+                        depth: 0,
+                        itemStyle: {
+                            color: '#fbb4ae'
+                        },
+                        lineStyle: {
+                            color: 'source',
+                            opacity: 0.6
+                        }
+                    }, {
+                        depth: 1,
+                        itemStyle: {
+                            color: '#b3cde3'
+                        },
+                        lineStyle: {
+                            color: 'source',
+                            opacity: 0.6
+                        }
+                    }, {
+                        depth: 2,
+                        itemStyle: {
+                            color: '#ccebc5'
+                        },
+                        lineStyle: {
+                            color: 'source',
+                            opacity: 0.6
+                        }
+                    }, {
+                        depth: 3,
+                        itemStyle: {
+                            color: '#decbe4'
+                        },
+                        lineStyle: {
+                            color: 'source',
+                            opacity: 0.6
+                        }
+                    }]
                 }]
             }
         };
@@ -39,37 +107,11 @@ export default{
             handler(){
                 this.initData();
             },
-            deep:true
+            deep:true,
+            immediate: true
         }
     },
-    created(){
-        // 接收窗体RESIZE事件
-        this.eventHub.$on("WINDOW-RESIZE-EVENT", this.checkChart);
-    },
-    mounted() {
-
-        this.$nextTick(()=>{
-            setTimeout(() => {
-                this.onInit();
-            });
-        })
-
-        // 监听窗口发生变化，resize组件
-        window.addEventListener('resize', this.checkChart)
-        
-        // 通过hook监听组件销毁钩子函数，并取消监听事件
-        this.$once('hook:beforeDestroy', () => {
-            window.removeEventListener('resize', this.checkChart)
-        })
-    },
     methods: {
-        onInit(){
-            let chart = echarts.init(this.$refs.chartContainer);
-            chart.setOption(this.option);
-            this.chart = chart;
-
-            this.initData();
-        },
         initData(){
             let data = [];
             let links = [];
@@ -85,27 +127,10 @@ export default{
                 links.push( {source: `${v.name} ${v.port}`, target: 'Sourth', value: v.out_msgs});
             });
 
-            this.option.series[0].data = [...data];
-            this.option.series[0].links = [...links];
+            this.options.series[0].data = [...data];
+            this.options.series[0].links = [...links];
             
-            this.chart.setOption(this.option);
-            
-        },
-        checkChart(){
-            try{
-                this.chart.resize();
-            } catch(err){
-                console.error(err)
-            }
-        },
-        beforeDestroy() {
-            if (!this.chart) {
-                return
-            }
-            this.chart.dispose();
-            this.chart = null;
         }
-        
     }  
 }
 </script>
