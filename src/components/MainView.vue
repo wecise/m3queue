@@ -140,7 +140,7 @@ export default {
 <style scoped>
 
   .el-container{
-    height:calc(100vh - 120px);
+    height:calc(100vh - 80px);
     background:#f2f2f2;
   }
   

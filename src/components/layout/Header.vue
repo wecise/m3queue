@@ -22,15 +22,15 @@
                     <template slot="title">
                         <svg-icon icon-class="user"/> {{ auth.username }}
                     </template>
-                    <el-menu-item index="/matrix/user" style="height:80px;">
+                    <el-menu-item index="/matrix/user">
                         <template slot="title">
                             <svg-icon icon-class="user2"/> 
                             <span slot="title">用户
-                                <div>
+                                <!--div>
                                 <el-button type="text" @click.stop="onToggleTheme('dark')" style="background:#252D47;padding: 5px;border-radius: 10px;"></el-button>
                                 <el-button type="text" @click.stop="onToggleTheme('light')" style="background: #1890ff;padding: 5px;border-radius: 10px;"></el-button>
                                 </div>
-                                <el-divider style="margin:0px;"></el-divider>
+                                <el-divider style="margin:0px;"></el-divider-->
                             </span>
                         </template>
                     </el-menu-item>
@@ -119,15 +119,18 @@ export default{
 </script>
 
 <style>
-    .dark .m3 > .el-header{
+    .dark .m3 > .header{
         height: 50px!important;
         line-height: 50px;
         /* background: rgb(37, 45, 71); */
         background: #252D47;
         color: #ffffff;
         padding: 0px 0px 0px 10px;
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
     }
-    .light .m3 > .el-header{
+    .light .m3 > .header{
         height: 50px!important;
         line-height: 50px;
         /* background: rgb(37, 45, 71); */
@@ -135,14 +138,16 @@ export default{
         color: #ffffff;
         padding: 0px 0px 0px 10px;
     }
-    .m3 > .el-header .el-image > .el-image__inner{
+    .m3 > .header .el-image > .el-image__inner{
         max-width: 120px;
         min-width: 32px;
         width: 64px;
         height: 32px;
         padding: 7px 0px;
     }
-    
+    .m3 > .el-main{
+        padding: 0px;
+    }
     .el-link.el-link--default {
         color: #ffffff;
     }
