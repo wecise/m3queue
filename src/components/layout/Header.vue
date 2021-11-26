@@ -7,10 +7,12 @@
             <span style="font-size:16px;vertical-align: top;">{{auth.Company.title}}</span>
         </el-col>
         <el-col :span="3" style="text-align: right;">
-            <MessageView></MessageView>
+            <!-- <MessageView></MessageView> -->
         </el-col>
         <el-col :span="1" style="text-align: right;">
-            
+            <!-- <div>
+                <el-button type="text" @click.stop="onToggleTheme($event)" class="toggle-theme" style="padding: 5px;border-radius: 10px;"></el-button>
+            </div> -->
         </el-col>
         <el-col :span="2">
             <el-menu :default-active="activeIndex" 
@@ -20,42 +22,35 @@
                     @select="onSelect">
                 <el-submenu index="1">
                     <template slot="title">
-                        <svg-icon icon-class="user"/> {{ auth.username }}
+                        <i class="el-icon-user-solid"></i> {{ auth.username }}
                     </template>
                     <el-menu-item index="/matrix/user">
+                        <i class="el-icon-user"></i>
                         <template slot="title">
-                            <svg-icon icon-class="user2"/> 
-                            <span slot="title">用户
-                                <!--div>
-                                <el-button type="text" @click.stop="onToggleTheme('dark')" style="background:#252D47;padding: 5px;border-radius: 10px;"></el-button>
-                                <el-button type="text" @click.stop="onToggleTheme('light')" style="background: #1890ff;padding: 5px;border-radius: 10px;"></el-button>
-                                </div>
-                                <el-divider style="margin:0px;"></el-divider-->
-                            </span>
+                            <span slot="title">用户</span>
                         </template>
                     </el-menu-item>
-                    
                     <el-menu-item index="/matrix/system" divided v-if="auth.isadmin">
+                        <i class="el-icon-setting"></i>
                         <template slot="title">
-                            <svg-icon icon-class="system"/>
                             <span slot="title">系统管理</span>
                         </template>
                     </el-menu-item>
                     <el-menu-item index="/matrix/files" v-if="auth.isadmin">
+                        <i class="el-icon-folder"></i>
                         <template slot="title">
-                            <svg-icon icon-class="folder"/>
                             <span slot="title">我的文件</span>
                         </template>
                     </el-menu-item>
                     <el-menu-item index="home" v-if="auth.isadmin">
+                        <i class="el-icon-s-home"></i>
                         <template slot="title">
-                            <svg-icon icon-class="home"/>
                             <span slot="title">默认首页</span>
                         </template>
                     </el-menu-item>
                     <el-menu-item index="signout" divided>
+                        <i class="el-icon-s-unfold"></i>
                         <template slot="title">
-                            <svg-icon icon-class="logout"/> 
                             <span slot="title">注销</span>
                         </template>
                     </el-menu-item>
@@ -68,7 +63,7 @@
 <script>
 import _ from 'lodash';
 import Cookies from 'js-cookie';
-import MessageView from '../../components/message/MessageView';
+// import MessageView from '../../components/message/MessageView';
 
 export default{
     name: "Header",
@@ -80,14 +75,11 @@ export default{
             activeIndex: '1'
         }
     },
-    components: {
-        MessageView
-    },
     created(){
         this.initTheme();
+        this.m3.html.setTitle(this.auth);
     },
     mounted(){
-        this.m3.setTitle(this.auth);
     },
     methods: {
         onSelect(key) {
@@ -95,48 +87,58 @@ export default{
                 window.open(key, '_blank');
             } else {
                 if(key === 'home'){
-                    this.m3.setAppAsHome(this,{url:'/home'});
+                    this.m3.html.setAppAsHome(this,{url:'/home'});
                 } else if(key==='signout'){
                     window.open(`/user/logout/${this.auth.Company.name}`,'_parent');
                 } 
             }
         },
         initTheme(){
+            window.m3.theme.initTheme();
             let body = document.body;
             let value = Cookies.get('m3-theme')?Cookies.get('m3-theme'):'dark';
             body.classList.add(value);
         },
-        onToggleTheme(val){
-
-            //let theme = {dark:'#252D47',light:'#409EFF'};
-            
-            Cookies.set('m3-theme',val);
-            
-            window.location.reload();
+        onToggleTheme(){
+            let val=Cookies.get("m3-theme")=='dark'?'light':'dark';
+            window.m3.theme.setTheme(val);
+            let body = document.body;
+            body.classList.remove(body.classList.item(0))
+            body.classList.add(val);
         }
     }
 }
 </script>
 
+<style scope>
+    .el-icon-user-solid{
+        color: #ffffff!important;
+        font-weight:500!important;
+    }
+</style>
+
 <style>
-    .dark .m3 > .header{
+    .dark .toggle-theme, .dark .toggle-theme.el-button--text:focus, .dark .toggle-theme.el-button--text:active, .dark .toggle-theme.el-button--text:hover {
+        background: #1890ff;
+    }
+    .light .toggle-theme, .light .toggle-theme.el-button--text:focus, .light .toggle-theme.el-button--text:active, .light .toggle-theme.el-button--text:hover {
+        background: #252D47;
+    }
+    .m3 > .header{
         height: 50px!important;
         line-height: 50px;
-        /* background: rgb(37, 45, 71); */
-        background: #252D47;
-        color: #ffffff;
-        padding: 0px 0px 0px 10px;
         position: fixed;
         width: 100%;
         z-index: 1000;
+        padding: 0px 0px 0px 10px;
+    }
+    .dark .m3 > .header{
+        background: #252D47;
+        color: #ffffff;
     }
     .light .m3 > .header{
-        height: 50px!important;
-        line-height: 50px;
-        /* background: rgb(37, 45, 71); */
         background: #1890ff;
         color: #ffffff;
-        padding: 0px 0px 0px 10px;
     }
     .m3 > .header .el-image > .el-image__inner{
         max-width: 120px;
@@ -152,32 +154,32 @@ export default{
         color: #ffffff;
     }
     .topbar-el-menu .el-submenu__icon-arrow.el-icon-arrow-down{
-            color: #ffffff;
-        }
-        .el-menu-item:hover{
-            background-color: #409dfe!important;
-        }
+        color: #ffffff;
+    }
+    .el-menu-item:hover{
+        background-color: #409dfe!important;
+    }
     .dark .m3 .topbar-el-menu.el-menu.el-menu--horizontal {
-            border-bottom: unset;
-            background: #242c46;
-        }
+        border-bottom: unset;
+        background: #242c46;
+    }
     .light .m3 .topbar-el-menu.el-menu.el-menu--horizontal {
-            border-bottom: unset;
-            background: #1890ff;
-        }
-        .topbar-el-menu.el-menu.el-menu--horizontal >.el-menu-item {
-            height: 30px;
-            line-height: 30px;
-        }
-        .topbar-el-menu.el-menu.el-menu--horizontal>.el-submenu {
-            float: right;
-        }
-        .topbar-el-menu.el-menu.el-menu--horizontal >.el-submenu .el-submenu__title {
-            height: 50px;
-            line-height: 50px;
-            border-bottom: unset;
-            color: #ffffff;
-        }
+        border-bottom: unset;
+        background: #1890ff;
+    }
+    .topbar-el-menu.el-menu.el-menu--horizontal >.el-menu-item {
+        height: 30px;
+        line-height: 30px;
+    }
+    .topbar-el-menu.el-menu.el-menu--horizontal>.el-submenu {
+        float: right;
+    }
+    .topbar-el-menu.el-menu.el-menu--horizontal >.el-submenu .el-submenu__title {
+        height: 50px;
+        line-height: 50px;
+        border-bottom: unset;
+        color: #ffffff;
+    }
     .el-menu--horizontal>.el-menu-item:not(.is-disabled):focus, 
     .el-menu--horizontal>.el-menu-item:not(.is-disabled):hover, 
     .el-menu--horizontal>.el-submenu .el-submenu__title:hover {

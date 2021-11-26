@@ -21,21 +21,21 @@
         </el-menu-item> -->
         
         <el-menu-item index="/">
-            <img :src="preFixIcon+'home.png'+postFixIcon" style="width:16px;"></img>
+            <img :src="preFixIcon+'home.png'+postFixIcon" style="width:16px;"/>
             <span style="padding-left:5px;" slot="title">首页</span>
         </el-menu-item>
         
         <!-- 有模板情况-->
         <el-submenu :index="item.name" v-for="item in model.template" :key="item.name" v-show="sideBarStatus === 0">
             <template slot="title">
-                <img :src="item.icon | pickIcon" style="width:16px;"></img>
+                <img :src="item.icon | pickIcon" style="width:16px;"/>
                 <span style="padding-left:5px;font-size:12px;">{{ item.title }}【{{item.groups.length}}】</span>
             </template>
             
             <el-menu-item-group>
                 <span slot="title" style="font-size:12px;">{{ item.title }}【{{item.groups.length}}】</span>
                 <el-menu-item :class="subItem.status" :index="subItem.url" v-for="subItem in item.groups"  :key="subItem.name">
-                    <img :src="subItem.icon | pickIcon" style="width:16px;"></img>
+                    <img :src="subItem.icon | pickIcon" style="width:16px;"/>
                     <span slot="title">
                         <span style="padding-left:5px;" v-if="global.register.lanuage == 'zh_CN'">{{subItem.cnname}}</span>
                         <span style="padding-left:5px;" v-else>{{subItem.enname}}</span>
@@ -57,7 +57,7 @@
             <el-menu-item-group>
                 <span slot="title">应用</span>
                 <el-menu-item :class="item.status" :index="item.url" v-for="item in model.list" :key="item.name">
-                    <img :src="item.icon | pickIcon" style="width:16px;"></img>
+                    <img :src="item.icon | pickIcon" style="width:16px;"/>
                     <span slot="title">
                         <span style="padding-left:5px;" v-if="global.register.lanuage == 'zh_CN'">{{item.cnname}}</span>
                         <span style="padding-left:5px;" v-else>{{item.enname}}</span>
@@ -71,7 +71,7 @@
 
         <!-- 没有模板情况，且菜单项数量没超过阈值-->
         <el-menu-item :class="item.status" :index="item.url" v-for="item in model.list" :key="item.name" v-show="sideBarStatus === 2">
-            <img :src="item.icon | pickIcon" style="width:16px;"></img>
+            <img :src="item.icon | pickIcon" style="width:16px;"/>
             <span slot="title">
                 <span style="padding-left:5px;" v-if="global.register.lanuage == 'zh_CN'">{{item.cnname}}</span>
                 <span style="padding-left:5px;" v-else>{{item.enname}}</span>
@@ -84,7 +84,7 @@
         <!-- 没有分组的应用-->
         <el-submenu :class="item.status" :index="item.url" v-for="item in model.appListUnGrouped" :key="item.name">
             <template slot="title">
-                <img :src="item.icon | pickIcon" style="width:16px;"></img>
+                <img :src="item.icon | pickIcon" style="width:16px;"/>
                 <span style="padding-left:5px;" v-if="global.register.lanuage == 'zh_CN'">{{item.cnname}}</span>
                 <span style="padding-left:5px;" v-else>{{item.enname}}</span>
             </template>
@@ -112,7 +112,7 @@ export default{
     data(){
         return {
             model: null,
-            preFixIcon: '/static/assets/images/apps/png/',
+            preFixIcon: `${window.assetsURLBase}/images/apps/png/`,
             postFixIcon: '',
             isCollapse: true,
             defaultActive: '/matrix/home',
@@ -128,7 +128,7 @@ export default{
     },
     filters:{
         pickIcon(icon){
-            return `/static/assets/images/apps/png/${icon}`;
+            return `${window.assetsURLBase}/images/apps/png/${icon}`;
         }
     },
     methods: {
@@ -185,7 +185,7 @@ export default{
         onToggle(){
             this.isCollapse = !this.isCollapse;
         },
-        onSelect(index,indexPath){
+        onSelect(index){
             if(index == 'toggle'){
                 this.onToggle();
             } else if(index == 'apps'){
@@ -240,7 +240,7 @@ export default{
 </style>
 
 <style>
-    .el-menu:not(.el-menu--popup-bottom-start), 
+    /*.el-menu:not(.el-menu--popup-bottom-start), 
     .el-menu--horizontal>.el-menu-item:not(.is-disabled):focus, 
     .el-menu--horizontal>.el-menu-item:not(.is-disabled):hover, 
     .el-menu--horizontal>.el-submenu .el-submenu__title:hover {
@@ -251,5 +251,5 @@ export default{
     }
     .el-submenu:hover {
         background-color: #409dfe!important;
-    }
+    }*/
 </style>
